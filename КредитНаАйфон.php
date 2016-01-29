@@ -11,8 +11,10 @@ $comission = 1000;    //ежемесячная комиссия
 $payout = 5000;    //ежемесячная выплата
 $payed = 0;
 
+$giantPercent = "Этот процент огромен. Не надо так!\n";
+
 if ($percentInput >= 200) {
-	echo "Этот процент огромен. Не надо так!\n";
+	echo $giantPercent;
 	exit();
 }
 
