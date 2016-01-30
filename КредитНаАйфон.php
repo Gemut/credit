@@ -11,14 +11,38 @@ $comission = 1000;    //ежемесячная комиссия
 $payout = 5000;    //ежемесячная выплата
 $payed = 0;
 
-$giantPercent = "Этот процент огромен. Не надо так!\n";
+function giantPercent() {
+	echo "Этот процент огромен. Не надо так!\n";
+}
 
-if ($percentInput >= 200) {
-	echo $giantPercent;
+function priceAndCredit($cost,$cred) {
+	echo "Цена товара: $cost\nСумма кредита: $cred\n\n";
+}
+
+function error() {
+	echo "Ошибка";
 	exit();
 }
 
-echo "Цена товара: $productCost\nСумма кредита: $credit\n\n";
+function payments($month,$credit,$payed){
+	echo "$month-й месяц.\nОсталось выплатить: $credit рублей\nЗаплачено: $payed рублей\n\n";
+}
+
+function lastPay($month,$payed) {
+	echo "$month-й месяц.\nКредит выплачен! Поздравляю!\nЗаплачено: $payed рублей\n\n";
+}
+
+function badCredit(){
+	echo "Такой кредит лучше не брать\n";
+    break;
+}
+
+if ($percentInput >= 200) {
+	giantPercent();
+	exit();
+}
+
+priceAndCredit($productCost,$credit);
 
 $regexp = '/[0-9]+/u';
 
@@ -32,8 +56,7 @@ if ($percentInput < 10) {
     $regexp2 = '/^([0-9])([0-9]*)/u';
     $percent = preg_replace($regexp2, '2.$2', $percentInput);
 } else {
-	echo "Ошибка";
-	exit();
+	error();
 }
 
 for ($months = 1; $credit >= 0; $months++) {
@@ -43,17 +66,16 @@ for ($months = 1; $credit >= 0; $months++) {
 	    $credit -= $payout;
 	    $credit = ceil($credit);
 	    $payed += $payout;
-	    echo "$months-й месяц.\nОсталось выплатить: $credit рублей\nЗаплачено: $payed рублей\n\n";
+	    payments($months,$credit,$payed);
     } else {
     	$credit -=$payout;
     	$credit = ceil($credit);
 	    $payed += $payout;
 	    $payed += $credit;
-	    echo "$months-й месяц.\nКредит выплачен! Поздравляю!\nЗаплачено: $payed рублей\n\n";
+	    lastPay($months,$payed);
     }
     if ($credit > ($productCost * 5) or $payed > ($productCost * 5)) {
-    	echo "Такой кредит лучше не брать\n";
-    	break;
+    	badCredit();
     }
 }
 
